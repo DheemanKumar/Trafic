@@ -83,7 +83,7 @@ public class pathFollow : MonoBehaviour
 
     void MoveAlongCurve()
     {
-        t += speed * Time.deltaTime;
+        t += speed * (Time.deltaTime);
 
         if (t > 1f)
         {

@@ -16,7 +16,7 @@ public class traficLight : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.C)){
             state+=1;
-            state=state%transform.childCount;
+            state=state%(transform.childCount);
             shift_light();
             
         }
@@ -33,13 +33,14 @@ public class traficLight : MonoBehaviour
                     transform.GetChild(i).GetComponent<SpriteRenderer>().color=new Vector4(1,0,0,0.3f);
                     transform.GetChild(i).GetChild(0).gameObject.SetActive(true);
                 }
-            }
+            
+        }
     }
 
     void OnMouseDown()
     {
         state+=1;
-        state=state%transform.childCount;
+        state=state%(transform.childCount);
         shift_light();
     }
 

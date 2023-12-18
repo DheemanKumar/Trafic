@@ -20,4 +20,6 @@ public class spawn_cars : MonoBehaviour
             c.GetComponent<pathFollow>().speed=Random.Range(0.7f,1.2f);
         }
     }
+
+    
 }
