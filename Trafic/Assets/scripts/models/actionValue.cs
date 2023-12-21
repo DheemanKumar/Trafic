@@ -1,56 +1,75 @@
 using System;
+using System.Diagnostics;
 using System.Linq;
+using System.Collections.Generic;
 
-public class QLearningAgent
+public class actionValue
 {
     private int stateSize;
     private int actionSize;
     private double[,] qTable;
-    private double learningRate;
-    private double discountFactor;
+    //private double learningRate;
+    //private double discountFactor;
     private double explorationProbability;
 
-    public QLearningAgent(int stateSize, int actionSize, double learningRate = 0.1, double discountFactor = 0.9, double explorationProbability = 0.1)
+    public actionValue(int stateSize, int actionSize, double explorationProbability = 0.1)
     {
         this.stateSize = stateSize;
         this.actionSize = actionSize;
-        this.learningRate = learningRate;
-        this.discountFactor = discountFactor;
+        //this.learningRate = learningRate;
+        //this.discountFactor = discountFactor;
         this.explorationProbability = explorationProbability;
 
         // Initialize Q-table
         qTable = new double[stateSize, actionSize];
+
     }
 
-    public int SelectAction(int state)
-    {
-        // Exploration-exploitation trade-off
-        if (new Random().NextDouble() < explorationProbability)
-        {
-            return new Random().Next(actionSize); // Explore
-        }
-        else
-        {
-            // Exploit
-            double[] qValues = new double[actionSize];
-            for (int a = 0; a < actionSize; a++)
-            {
-                qValues[a] = qTable[state, a];
-            }
-
-            return Array.IndexOf(qValues, qValues.Max());
-        }
+    public double[,] getqtable(){
+        return qTable;
     }
 
     public void UpdateQTable(int state, int action, double reward, int nextState)
     {
         // Q-value update using the action value method
-        double bestNextActionValue = Array.IndexOf(qTable, nextState == 8 ? 1 : 0);
+        double bestNextActionValue = GetMaxQValue(nextState);
         double currentQValue = qTable[state, action];
 
-        double newQValue = (1 - learningRate) * currentQValue +
-                           learningRate * (reward + discountFactor * bestNextActionValue);
+        double newQValue = (currentQValue + bestNextActionValue+reward);
 
         qTable[state, action] = newQValue;
+    }
+
+    public double GetMaxQValue(int state)
+    {
+        // Get the maximum Q-value for the next state
+        double maxQValue = double.MinValue;
+        for (int a = 0; a < actionSize; a++)
+        {
+            double qValue = qTable[state, a];
+            if (qValue > maxQValue)
+            {
+                maxQValue = qValue;
+            }
+        }
+        return maxQValue;
+    }
+
+    public string getMaxQValue(int state)
+    {
+        // Get the maximum Q-value for the next state
+        string  ans= "";
+        double maxQValue = double.MinValue;
+        for (int a = 0; a < actionSize; a++)
+        {
+            double qValue = qTable[state, a];
+            if (qValue > maxQValue)
+            {
+                maxQValue = qValue;
+            }
+            ans+=qValue.ToString();
+            ans+=" ";
+        }
+        return ans;
     }
 }
