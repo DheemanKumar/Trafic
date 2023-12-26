@@ -7,7 +7,7 @@ using System;
 
 public class TraficAgent1 : MonoBehaviour
 {
-actionValue1 av;
+actionValue av;
 
     public double[] state;
 
@@ -19,7 +19,7 @@ actionValue1 av;
     // Start is called before the first frame update
     void Start()
     {
-        av = new actionValue1(stateSize, actionSize);
+        av = new actionValue(stateSize, actionSize);
     }
 
 

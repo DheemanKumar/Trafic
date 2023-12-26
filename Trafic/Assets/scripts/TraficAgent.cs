@@ -22,6 +22,8 @@ public class TraficAgent : MonoBehaviour
     public int action;
     public double[] state;
 
+    public int total_states=0;
+
     int ac;
 
     // Start is called before the first frame update
@@ -43,6 +45,7 @@ public class TraficAgent : MonoBehaviour
         traficLight.setlight(av.get_action(state));
         ac=0;
 
+
     }
 
 
@@ -51,8 +54,12 @@ public class TraficAgent : MonoBehaviour
 
     private void Update()
     {
+
+        if (Input.GetKeyDown(KeyCode.L)){
+            av.LoadQTable("qTable.dat");
+        }
         
-        // Increment the timer each frame
+        // // Increment the timer each frame
         timer += Time.deltaTime;
 
         // Check if the timer has reached the desired interval
@@ -68,10 +75,18 @@ public class TraficAgent : MonoBehaviour
         //     calculate();
         // }
 
+        if (Input.GetKeyDown(KeyCode.S)){
+            av.SaveQTable("acionvalue.csv");
+        }
+
+        total_states=av.qtl();
+
+        
 
     }    // Update is called once per frame
     void calculate()
     {
+        //Debug.Log("length  "+av.qtl());
         finalcars=FindSum(state);
 
         av.set_Action(state,traficLight.state,initialcars-finalcars);
@@ -82,7 +97,7 @@ public class TraficAgent : MonoBehaviour
 
         //Debug.Log(state[0]+" "+state[1]+" "+state[2]+" "+state[3]+" "+traficLight.state+" "+(initialcars-finalcars));
 
-        Debug.Log(ac+"  -  "+av.get_S_state(state)+"  -   "+ av.get_num_act(state) +"   -  "+av.get_S_action(state));
+        //Debug.Log(ac+"  -  "+av.get_S_state(state)+"  -   "+ av.get_num_act(state) +"   -  "+av.get_S_action(state));
 
         state=new double[4];
         for (int i=0;i<transform.childCount;i++){
@@ -112,7 +127,7 @@ public class TraficAgent : MonoBehaviour
 
         Debug.Log(state[0]+" "+state[1]+" "+state[2]+" "+state[3]+" "+traficLight.state+" "+(initialcars-finalcars));
 
-        Debug.Log(av.get_S_state(state)+"  -   "+ av.get_num_act(state) +"   -  "+av.get_S_action(state));
+        //Debug.Log(av.get_S_state(state)+"  -   "+ av.get_num_act(state) +"   -  "+av.get_S_action(state));
 
         
     }
@@ -128,5 +143,9 @@ public class TraficAgent : MonoBehaviour
         }
 
         return sum;
+    }
+
+     public actionValue1 get_qtable(){
+        return av;
     }
 }

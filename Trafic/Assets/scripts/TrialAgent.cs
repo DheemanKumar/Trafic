@@ -32,13 +32,19 @@ public class TrialAgent : MonoBehaviour
             a.get_action(st);
             a.set_Action(st, 1, 5);
 
-            
-            Debug.Log(a.qtl()+ "  -  " +a.get_S_state(state) + "  -   " + a.get_num_act(state) + "   -  " + a.get_S_action(state));
+            Debug.Log("saved " +a.qtl());
+            //Debug.Log(a.qtl()+ "  -  " +a.get_S_state(state) + "  -   " + a.get_num_act(state) + "   -  " + a.get_S_action(state));
         }
 
-        if (Input.GetKeyDown(KeyCode.O)){
-            //a.printqt();
+        
+
+        if (Input.GetKeyDown(KeyCode.L)){
+            a.LoadQTable("qTable.dat");
         }
+    }
+
+    public actionValue1 get_qtable(){
+        return a;
     }
 
 
