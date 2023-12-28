@@ -4,6 +4,7 @@ using System.ComponentModel;
 using UnityEngine;
 using UnityEditor;
 using System;
+using System.IO;
 
 public class TraficAgent : MonoBehaviour
 {
@@ -30,7 +31,16 @@ public class TraficAgent : MonoBehaviour
     void Start()
     {
         traficLight=GetComponent<traficLight>();
+
         av=new actionValue1(stateSize,actionSize);
+        string filePath = "qTable.dat";
+
+        // Check if the file exists
+        if (File.Exists(filePath))
+        {
+            av.LoadQTable(filePath);
+        }
+
         states=new state[transform.childCount];
 
         stateSize=transform.childCount;
@@ -55,14 +65,8 @@ public class TraficAgent : MonoBehaviour
     private void Update()
     {
 
-        if (Input.GetKeyDown(KeyCode.L)){
-            av.LoadQTable("qTable.dat");
-        }
         
-        // // Increment the timer each frame
         timer += Time.deltaTime;
-
-        // Check if the timer has reached the desired interval
         if (timer >= updateInterval)
         {
             // Your update logic goes here
@@ -71,13 +75,6 @@ public class TraficAgent : MonoBehaviour
             timer = 0f;
         }
 
-        // if(Input.GetKeyDown(KeyCode.H)){
-        //     calculate();
-        // }
-
-        if (Input.GetKeyDown(KeyCode.S)){
-            av.SaveQTable("acionvalue.csv");
-        }
 
         total_states=av.qtl();
 
@@ -89,13 +86,15 @@ public class TraficAgent : MonoBehaviour
         //Debug.Log("length  "+av.qtl());
         finalcars=FindSum(state);
 
+        //Debug.Log("difference  "+initialcars.ToString()+"  "+finalcars.ToString());
+
         av.set_Action(state,traficLight.state,initialcars-finalcars);
         rew=initialcars-finalcars;
 
 
         action=traficLight.state;
 
-        //Debug.Log(state[0]+" "+state[1]+" "+state[2]+" "+state[3]+" "+traficLight.state+" "+(initialcars-finalcars));
+        Debug.Log("state  "+state[0]+" "+state[1]+" "+state[2]+" "+state[3]);
 
         //Debug.Log(ac+"  -  "+av.get_S_state(state)+"  -   "+ av.get_num_act(state) +"   -  "+av.get_S_action(state));
 
@@ -105,6 +104,7 @@ public class TraficAgent : MonoBehaviour
         }
 
         ac=av.get_action(state);
+        //Debug.Log(ac);
         traficLight.setlight(ac);
         //Debug.Log(av.get_S_state(state)+"  -   "+ av.get_num_act(state) +"   -  "+av.get_S_action(state));
 
@@ -112,26 +112,6 @@ public class TraficAgent : MonoBehaviour
 
         initialcars=finalcars;
     }
-
-
-    void calculate2()
-    {
-        
-
-
-        traficLight.setlight(av.get_action(state));
-
-        av.set_Action(state,traficLight.state,initialcars-finalcars);
-
-
-
-        Debug.Log(state[0]+" "+state[1]+" "+state[2]+" "+state[3]+" "+traficLight.state+" "+(initialcars-finalcars));
-
-        //Debug.Log(av.get_S_state(state)+"  -   "+ av.get_num_act(state) +"   -  "+av.get_S_action(state));
-
-        
-    }
-
 
     int FindSum(double[] array)
     {

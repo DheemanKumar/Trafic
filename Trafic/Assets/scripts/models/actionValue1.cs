@@ -14,49 +14,22 @@ public class actionValue1
     private int actionSize;
     private double explorationProbability;
 
-
-    [System.Serializable]
-  public class Action
-    {
-        private double[] actiontable;
-        private int reward;
-
-        public Action(int actionSize)
-        {
-            actiontable = new double[actionSize];
-        }
-
-        public void setAction(double[] actions, int reward)
-        {
-            this.actiontable = actions;
-            this.reward = reward;
-        }
-
-        public double[] getAction()
-        {
-            return actiontable;
-        }
-
-        public int getReward()
-        {
-            return reward;
-        }
-    }
-
-
-
     [System.Serializable]
     public class State
     {
+
         private double[] statetable;
         private int actionSize;
-        public List<Action> Actions;
+        double[] Sum;
+        double[] count;
 
         public State(int stateSize, int actionSize)
         {
             this.actionSize = actionSize;
             statetable = new double[stateSize];
-            Actions = new List<Action>();
+
+            Sum = new double[actionSize];
+            count = new double[actionSize];
         }
 
         public double[] get_state()
@@ -71,31 +44,53 @@ public class actionValue1
 
         public void addAction(double[] actions, int reward)
         {
-            Action newction = new Action(actionSize);
-            newction.setAction(actions, reward);
-            Actions.Add(newction);
+            string ans="";
+            for (int i=0;i<actions.Length;i++)
+                ans+=actions[i].ToString()+" ";
+            UnityEngine.Debug.Log("actions   "+ans);
+            UnityEngine.Debug.Log("reward    "+reward.ToString());
+
+            int index = Array.IndexOf(actions, 1);
+            Sum[index] += reward;
+            count[index] += 1;
+
+            ans="";
+            for (int i=0;i<Sum.Length;i++)
+                ans+=Sum[i].ToString()+" ";
+            UnityEngine.Debug.Log("sum      "+ans);
+
+            ans="";
+            for (int i=0;i<count.Length;i++)
+                ans+=count[i].ToString()+" ";
+            UnityEngine.Debug.Log("count    "+ans);
+            // //UnityEngine.Debug.Log(Sum[0].ToString()+"    len");
+
         }
 
-        public void addAction(Action action){
+        public void addAction(double[] oldSum, double[] oldCount)
+        {
+            for (int i = 0; i < Sum.Length; i++)
+            {
+                Sum[i] += oldSum[i];
+                count[i] += oldCount[i];
+            }
+        }
 
+        public double[] getSum()
+        {
+            return Sum;
+        }
+        public double[] getcount()
+        {
+            return count;
         }
 
         public double[] get_Qvalues()
         {
             double[] Qvalues = new double[actionSize];
-            double[] Sum = new double[actionSize];
-            double[] count = new double[actionSize];
 
+            //UnityEngine.Debug.Log("action size   "+Actions.Count.ToString());
 
-            for (int i = 0; i < Actions.Count; i++)
-            {
-                Action A = Actions[i];
-                double[] a = A.getAction();
-                int r = A.getReward();
-                int index = Array.IndexOf(a, 1);
-                Sum[index] += r;
-                count[index] += 1;
-            }
             for (int i = 0; i < actionSize; i++)
             {
                 if (count[i] == 0)
@@ -110,11 +105,11 @@ public class actionValue1
 
             return Qvalues;
         }
-  }
-    
-    
-    
-    public actionValue1(int stateSize, int actionSize, double explorationProbability = 0.1)
+    }
+
+
+
+    public actionValue1(int stateSize, int actionSize, double explorationProbability = 0.33)
     {
         this.explorationProbability = explorationProbability;
         this.stateSize = stateSize;
@@ -138,24 +133,51 @@ public class actionValue1
             //add state to qtable
             qTable.Add(s);
             //UnityEngine.Debug.Log("state added "+qTable.Count);
-            if (random.NextDouble() > explorationProbability)
+            if (random.NextDouble() < explorationProbability)
             {
+                //UnityEngine.Debug.Log("random   ");
                 return random.Next(0, actionSize);
 
             }
             else
+            {
+                double[] qvalue = s.get_Qvalues();
+                string q = "";
+                for (int i = 0; i < qvalue.Length; i++)
+                {
+                    q += qvalue[i].ToString() + " ";
+                }
+                //UnityEngine.Debug.Log("new   "+q);
                 return Array.IndexOf(s.get_Qvalues(), s.get_Qvalues().Max());
+            }
         }
         else
         {
-            double[] qvalue = qTable[index].get_Qvalues();
-            if (random.NextDouble() > explorationProbability)
+
+            if (random.NextDouble() < explorationProbability)
             {
+                //UnityEngine.Debug.Log("random   ");
                 return random.Next(0, actionSize);
 
             }
             else
-                return Array.IndexOf(qvalue, qvalue.Max()); ;
+            {
+                double[] qvalue = qTable[index].get_Qvalues();
+
+                string ans = "";
+                for (int i=0;i<qvalue.Length;i++)
+                    ans+=qvalue[i].ToString()+" ";
+                UnityEngine.Debug.Log("qvalues   "+ans);
+
+                // string q = "";
+                // for (int i = 0; i < qvalue.Length; i++)
+                // {
+                //     q += qvalue[i].ToString() + " ";
+                // }
+                int Q=Array.IndexOf(qvalue, qvalue.Max());
+                UnityEngine.Debug.Log("Q   "+Q);
+                return Q;
+            }
             //extract the state from qtable
         }
     }
@@ -222,7 +244,7 @@ public class actionValue1
         FileStream fileStream = File.Create(fileName);
         binaryFormatter.Serialize(fileStream, qTable);
         fileStream.Close();
-        
+
 
         UnityEngine.Debug.Log("qTable saved to " + fileName);
 
@@ -247,22 +269,24 @@ public class actionValue1
         }
     }
 
-    public void add_qtable(List<State> Table){
-        for (int i=0;i<Table.Count;i++){
-            int index=stateIndex(Table[i]);
-            if(index==-1){
+    public void add_qtable(List<State> Table)
+    {
+        for (int i = 0; i < Table.Count; i++)
+        {
+            int index = stateIndex(Table[i]);
+            if (index == -1)
+            {
                 qTable.Add(Table[i]);
             }
-            else{
-                State st=Table[i];
-                for (int j=0;j<st.Actions.Count();j++){
-                    qTable[index].addAction(st.Actions[j]);
-                }
+            else
+            {
+                State st = Table[i];
+                qTable[index].addAction(st.getSum(), st.getcount());
             }
         }
 
     }
-    
+
 
 
 }
