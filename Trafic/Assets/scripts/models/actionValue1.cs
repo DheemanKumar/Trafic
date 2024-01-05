@@ -44,25 +44,25 @@ public class actionValue1
 
         public void addAction(double[] actions, int reward)
         {
-            string ans="";
-            for (int i=0;i<actions.Length;i++)
-                ans+=actions[i].ToString()+" ";
-            UnityEngine.Debug.Log("actions   "+ans);
-            UnityEngine.Debug.Log("reward    "+reward.ToString());
+            // string ans="";
+            // for (int i=0;i<actions.Length;i++)
+            //     ans+=actions[i].ToString()+" ";
+            // UnityEngine.Debug.Log("actions   "+ans);
+            // UnityEngine.Debug.Log("reward    "+reward.ToString());
 
             int index = Array.IndexOf(actions, 1);
             Sum[index] += reward;
             count[index] += 1;
 
-            ans="";
-            for (int i=0;i<Sum.Length;i++)
-                ans+=Sum[i].ToString()+" ";
-            UnityEngine.Debug.Log("sum      "+ans);
+            // ans="";
+            // for (int i=0;i<Sum.Length;i++)
+            //     ans+=Sum[i].ToString()+" ";
+            // UnityEngine.Debug.Log("sum      "+ans);
 
-            ans="";
-            for (int i=0;i<count.Length;i++)
-                ans+=count[i].ToString()+" ";
-            UnityEngine.Debug.Log("count    "+ans);
+            // ans="";
+            // for (int i=0;i<count.Length;i++)
+            //     ans+=count[i].ToString()+" ";
+            // UnityEngine.Debug.Log("count    "+ans);
             // //UnityEngine.Debug.Log(Sum[0].ToString()+"    len");
 
         }
@@ -164,10 +164,10 @@ public class actionValue1
             {
                 double[] qvalue = qTable[index].get_Qvalues();
 
-                string ans = "";
-                for (int i=0;i<qvalue.Length;i++)
-                    ans+=qvalue[i].ToString()+" ";
-                UnityEngine.Debug.Log("qvalues   "+ans);
+                // string ans = "";
+                // for (int i=0;i<qvalue.Length;i++)
+                //     ans+=qvalue[i].ToString()+" ";
+                // UnityEngine.Debug.Log("qvalues   "+ans);
 
                 // string q = "";
                 // for (int i = 0; i < qvalue.Length; i++)
@@ -175,7 +175,7 @@ public class actionValue1
                 //     q += qvalue[i].ToString() + " ";
                 // }
                 int Q=Array.IndexOf(qvalue, qvalue.Max());
-                UnityEngine.Debug.Log("Q   "+Q);
+                // UnityEngine.Debug.Log("Q   "+Q);
                 return Q;
             }
             //extract the state from qtable
