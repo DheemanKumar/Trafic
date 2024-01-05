@@ -141,7 +141,7 @@ Transform:
   - {fileID: 3215219667672442418}
   - {fileID: 1617045786037743121}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7978492812769310238
 MonoBehaviour:
@@ -164,8 +164,9 @@ MonoBehaviour:
   rew: 0
   action: 0
   state: []
+  total_states: 0
   timer: 0
-  updateInterval: 2
+  updateInterval: 1
 --- !u!114 &7005492135100840705
 MonoBehaviour:
   m_ObjectHideFlags: 0

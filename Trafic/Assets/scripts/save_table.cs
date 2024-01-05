@@ -18,7 +18,7 @@ public int stateSize;
     void Start()
     {
         afinal=new actionValue1(stateSize,actionSize);;
-        
+        //Debug.Log(name);
     }
 
     // Update is called once per frame
@@ -26,6 +26,7 @@ public int stateSize;
     {
         if (Input.GetKeyDown(KeyCode.O)){
             save();
+            
         }
     }
 
@@ -35,6 +36,7 @@ public int stateSize;
             afinal.add_qtable(a.qTable);
         }
         afinal.SaveQTable("qTable.dat");
+        afinal.SaveQTablehistory("qTableHistory.txt");
     }
 
 

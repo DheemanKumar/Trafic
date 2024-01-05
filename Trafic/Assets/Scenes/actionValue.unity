@@ -216,7 +216,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 614385808927689026, guid: bbd28fe2552234006ae6e9d1c479e82e, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4607263933439069516, guid: bbd28fe2552234006ae6e9d1c479e82e, type: 3}
       propertyPath: m_RootOrder
@@ -645,13 +645,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   car: {fileID: 905233631347374992, guid: dc98ebc542c1d48a2bf04981908ac8a6, type: 3}
   initialPoints:
-  - {fileID: 1243514835}
-  - {fileID: 1713674472}
   - {fileID: 1460740895}
-  - {fileID: 2012134603}
+  - {fileID: 1713674472}
   - {fileID: 1474420157}
   - {fileID: 2046465188}
-  respawnTime: 1
+  - {fileID: 1243514835}
+  - {fileID: 2012134603}
+  respawnTime: 3
   Timer: 1
 --- !u!1 &368757098
 GameObject:
@@ -3107,17 +3107,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4607263933439069516, guid: bbd28fe2552234006ae6e9d1c479e82e, type: 3}
   m_PrefabInstance: {fileID: 129477687}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1511162095 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7978492812769310238, guid: bbd28fe2552234006ae6e9d1c479e82e, type: 3}
-  m_PrefabInstance: {fileID: 129477687}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e1b623e398a1847d38ccf9e835e82e2a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1524919921
 GameObject:
   m_ObjectHideFlags: 0
@@ -3739,6 +3728,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7978492812769310238, guid: bbd28fe2552234006ae6e9d1c479e82e, type: 3}
+      propertyPath: updateInterval
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4112,6 +4105,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   t:
   - {fileID: 662921891}
-  - {fileID: 1511162095}
   stateSize: 4
   actionSize: 4

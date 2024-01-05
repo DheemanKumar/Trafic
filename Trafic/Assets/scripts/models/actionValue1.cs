@@ -17,7 +17,8 @@ public class actionValue1
     [System.Serializable]
     public class State
     {
-
+        public List<double[]> allsums;
+        public List<double[]> allcount;
         private double[] statetable;
         private int actionSize;
         double[] Sum;
@@ -30,6 +31,9 @@ public class actionValue1
 
             Sum = new double[actionSize];
             count = new double[actionSize];
+            allsums = new List<double[]>();
+
+            allcount = new List<double[]>();
         }
 
         public double[] get_state()
@@ -44,26 +48,13 @@ public class actionValue1
 
         public void addAction(double[] actions, int reward)
         {
-            string ans="";
-            for (int i=0;i<actions.Length;i++)
-                ans+=actions[i].ToString()+" ";
-            UnityEngine.Debug.Log("actions   "+ans);
-            UnityEngine.Debug.Log("reward    "+reward.ToString());
-
             int index = Array.IndexOf(actions, 1);
             Sum[index] += reward;
             count[index] += 1;
 
-            ans="";
-            for (int i=0;i<Sum.Length;i++)
-                ans+=Sum[i].ToString()+" ";
-            UnityEngine.Debug.Log("sum      "+ans);
-
-            ans="";
-            for (int i=0;i<count.Length;i++)
-                ans+=count[i].ToString()+" ";
-            UnityEngine.Debug.Log("count    "+ans);
-            // //UnityEngine.Debug.Log(Sum[0].ToString()+"    len");
+            // {actions[0],actions[1],actions[2],actions[3]}
+            allsums.Add(new double[]{Sum[0],Sum[1],Sum[2],Sum[3]});
+            allcount.Add(new double[]{actions[0],actions[1],actions[2],actions[3]});
 
         }
 
@@ -73,6 +64,9 @@ public class actionValue1
             {
                 Sum[i] += oldSum[i];
                 count[i] += oldCount[i];
+
+                // allsums.Add(new double[]{Sum[0],Sum[1],Sum[2],Sum[3]});
+                // allcount.Add(new double[]{count[0],count[1],count[2],count[3]});
             }
         }
 
@@ -89,7 +83,6 @@ public class actionValue1
         {
             double[] Qvalues = new double[actionSize];
 
-            //UnityEngine.Debug.Log("action size   "+Actions.Count.ToString());
 
             for (int i = 0; i < actionSize; i++)
             {
@@ -103,6 +96,7 @@ public class actionValue1
                 }
             }
 
+
             return Qvalues;
         }
     }
@@ -115,7 +109,6 @@ public class actionValue1
         this.stateSize = stateSize;
         this.actionSize = actionSize;
 
-        // Initialize Q-table
         qTable = new List<State>();
     }
 
@@ -128,27 +121,19 @@ public class actionValue1
         s.setState(statetable);
         int index = stateIndex(s);
 
+
         if (index == -1)
         {
-            //add state to qtable
             qTable.Add(s);
-            //UnityEngine.Debug.Log("state added "+qTable.Count);
             if (random.NextDouble() < explorationProbability)
             {
-                //UnityEngine.Debug.Log("random   ");
                 return random.Next(0, actionSize);
 
             }
             else
             {
                 double[] qvalue = s.get_Qvalues();
-                string q = "";
-                for (int i = 0; i < qvalue.Length; i++)
-                {
-                    q += qvalue[i].ToString() + " ";
-                }
-                //UnityEngine.Debug.Log("new   "+q);
-                return Array.IndexOf(s.get_Qvalues(), s.get_Qvalues().Max());
+                return Array.IndexOf(qvalue, qvalue.Max());
             }
         }
         else
@@ -156,29 +141,16 @@ public class actionValue1
 
             if (random.NextDouble() < explorationProbability)
             {
-                //UnityEngine.Debug.Log("random   ");
                 return random.Next(0, actionSize);
 
             }
             else
             {
                 double[] qvalue = qTable[index].get_Qvalues();
+                int Q = Array.IndexOf(qvalue, qvalue.Max());
 
-                string ans = "";
-                for (int i=0;i<qvalue.Length;i++)
-                    ans+=qvalue[i].ToString()+" ";
-                UnityEngine.Debug.Log("qvalues   "+ans);
-
-                // string q = "";
-                // for (int i = 0; i < qvalue.Length; i++)
-                // {
-                //     q += qvalue[i].ToString() + " ";
-                // }
-                int Q=Array.IndexOf(qvalue, qvalue.Max());
-                UnityEngine.Debug.Log("Q   "+Q);
                 return Q;
             }
-            //extract the state from qtable
         }
     }
 
@@ -190,10 +162,8 @@ public class actionValue1
     public void set_Action(double[] statetable, int action, int reward)
     {
         State s = new State(stateSize, actionSize);
-        //UnityEngine.Debug.Log("sa  "+statetable[0]+" "+statetable[1]+" "+statetable[2]+" "+statetable[3]);
         s.setState(statetable);
         int index = stateIndex(s);
-        //UnityEngine.Debug.Log("index  "+index+"   size "+qTable.Count);
 
         double[] actions = new double[actionSize];
 
@@ -244,11 +214,49 @@ public class actionValue1
         FileStream fileStream = File.Create(fileName);
         binaryFormatter.Serialize(fileStream, qTable);
         fileStream.Close();
-
-
         UnityEngine.Debug.Log("qTable saved to " + fileName);
 
 
+    }
+
+    public void SaveQTablehistory(string fileName)
+    {
+        string lines = "";
+        for (int i = 0; i < qTable.Count; i++)
+        {
+            string st = "";
+            //UnityEngine.Debug.Log(qTable[i].get_state().Length);
+            for (int j = 0; j < qTable[i].get_state().Length; j++)
+            {
+                //UnityEngine.Debug.Log(j);
+                st += qTable[i].get_state()[j].ToString() + " ";
+            }
+            lines += st + "\n";
+
+            List<double[]> alls;
+            alls = qTable[i].allsums;
+            List<double[]> allc;
+            allc = qTable[i].allcount;
+            for (int j = 0; j < alls.Count; j++)
+            {
+                string qv = "   -"+j+"> s {";
+                //UnityEngine.Debug.Log(all[j]);
+                for (int k = 0; k < alls[j].Length; k++)
+                {
+                    qv += alls[j][k].ToString() + "  ";
+                }
+                qv+="}      c {";
+                for (int k = 0; k < allc[j].Length; k++)
+                {
+                    qv += allc[j][k].ToString() + "  ";
+                }
+                lines+=qv+"}\n";
+            }
+
+            lines += "\n";
+
+        }
+        File.WriteAllText(fileName, lines);
     }
 
 
