@@ -274,7 +274,9 @@ public class actionValue1
         else
         {
             UnityEngine.Debug.LogWarning("File not found: " + fileName);
+            score.ResetGameData();
         }
+        //UnityEngine.Debug.Log(File.Exists(fileName));
     }
 
     public void add_qtable(List<State> Table)

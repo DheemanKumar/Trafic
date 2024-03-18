@@ -1,16 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using UnityEngine;
-using UnityEditor;
-using System;
 
-public class TraficAgent : MonoBehaviour
+public class player : MonoBehaviour
 {
-
-    actionValue1 av;
+    public TraficAgent1 ta;
     public int stateSize;
-    public int actionSize;
     public traficLight traficLight;
     public state[] states;
 
@@ -19,12 +14,9 @@ public class TraficAgent : MonoBehaviour
 
     public int rew;
 
-    public int action;
     public double[] state;
 
-    public int total_states=0;
 
-    int ac;
 
     bool weight;
 
@@ -32,7 +24,6 @@ public class TraficAgent : MonoBehaviour
     void Start()
     {
         traficLight=GetComponent<traficLight>();
-        av=new actionValue1(stateSize,actionSize);
         states=new state[transform.childCount];
 
         stateSize=transform.childCount;
@@ -42,13 +33,10 @@ public class TraficAgent : MonoBehaviour
         }
 
         state=new double[stateSize];
-        takeaction();
 
-        traficLight.setlight(av.get_action(state));
-        ac=0;
 
         weight=false;
-        Time.timeScale=10;
+        //Time.timeScale=10;
     }
 
 
@@ -57,10 +45,6 @@ public class TraficAgent : MonoBehaviour
 
     private void Update()
     {
-
-        if (Input.GetKeyDown(KeyCode.L)){
-            av.LoadQTable("qTable.dat");
-        }
         
         timer += Time.deltaTime;
 
@@ -70,7 +54,6 @@ public class TraficAgent : MonoBehaviour
             takeaction();
             weight=true;
             initialcars=FindSum(state);
-            //Debug.Log(initialcars);
         }
         if (timer >= updateInterval && weight)
         {
@@ -78,15 +61,6 @@ public class TraficAgent : MonoBehaviour
             weight=false;
             timer=0;
         }
-
-
-        if (Input.GetKeyDown(KeyCode.S)){
-            av.SaveQTablehistory("qTableHistory.txt");
-        }
-
-        total_states=av.qtl();
-
-        
 
     }    // Update is called once per frame
    
@@ -97,8 +71,9 @@ public class TraficAgent : MonoBehaviour
         for (int i=0;i<transform.childCount;i++){
             state[i]=states[i].count;
         }
-
-        ac=av.get_action(state);
+        //Debug.Log(state[0]+" "+state[1]+" "+state[2]+" "+state[3]);
+    
+        int ac=ta.takeaction(state);
         traficLight.setlight(ac);
         
 
@@ -118,8 +93,7 @@ public class TraficAgent : MonoBehaviour
         else if(initialcars==finalcars) rew=-finalcars;
         else rew=initialcars-finalcars;
 
-        
-        av.set_Action(state,traficLight.state,rew);
+        ta.getreward(state,traficLight.state,rew);
         //Debug.Log(state[0]+" "+state[1]+" "+state[2]+" "+state[3]+"     "+traficLight.state+"   "+(rew));
     }
 
@@ -137,7 +111,4 @@ public class TraficAgent : MonoBehaviour
         return sum;
     }
 
-     public actionValue1 get_qtable(){
-        return av;
-    }
 }
