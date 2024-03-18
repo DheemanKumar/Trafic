@@ -88,8 +88,8 @@ public class UnityToPython : MonoBehaviour
             // Convert the numbers to bytes and send them to the server
 
 
-            int result = Convert.ToInt32(response);
-            Debug.Log($"Sum of numbers is: {result}");
+            //int result = Convert.ToInt32(response);
+            Debug.Log($"Response is: {response}");
 
             // Convert the response to an integer and print it
 

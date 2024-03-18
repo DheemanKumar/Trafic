@@ -1320,8 +1320,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffc28272fa80f4468bba27d3f4bd4a15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numbers: 
+  numbers: 2d1
   send: 0
+  Reconnect: 0
 --- !u!1001 &590919649546319019
 PrefabInstance:
   m_ObjectHideFlags: 0

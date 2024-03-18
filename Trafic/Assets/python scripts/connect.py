@@ -29,12 +29,14 @@ while True:
     data = client_socket.recv(1024)
     if not data:
         break
+
     # Decode the received data
-    Bandet.convertor(data)
-    
-    result = 1
+    result = Bandet.convertor(data)
+
+    #print("clear")
+
     # Send the result back to the client
-    client_socket.send(str(result).encode())
+    client_socket.send(result.encode())
 
 # Close the connection
 client_socket.close()
