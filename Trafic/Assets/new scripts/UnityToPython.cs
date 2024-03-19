@@ -5,6 +5,8 @@ using System.Text;
 
 public class UnityToPython : MonoBehaviour
 {
+    public bool active=true;
+
     public string numbers;
 
     public bool send=false;
@@ -39,34 +41,31 @@ public class UnityToPython : MonoBehaviour
         }
     }
 
-    void Start()
+    private void Awake()
     {
         Reconnect = false;
         connected = false;
         // Define host and port
-        connect();
+        if (active)
+        {
+            connect();
+        }
     }
+
 
     private void OnDestroy()
     {
         // Close the stream and the client
-        stream.Close();
-        client.Close();
-        Debug.Log("System Disconnected.");
+        if (active)
+        {
+            stream.Close();
+            client.Close();
+            Debug.Log("System Disconnected.");
+        }
     }
 
-    private string sendToPython(string message)
+    public string sendToPython(string message)
     {
-        //string message = "";
-
-        //for (int i = 0; i < input.Length; i++)
-        //{
-        //    message += input[i].ToString();
-        //    if (i < input.Length - 1)
-        //    {
-        //        message += ", ";
-        //    }
-        //}
 
         byte[] data = Encoding.UTF8.GetBytes(message);
         stream.Write(data, 0, data.Length);
@@ -82,26 +81,21 @@ public class UnityToPython : MonoBehaviour
 
     private void Update()
     {
-        if (send)
+        if (active)
         {
-            string response= sendToPython(numbers);
-            // Convert the numbers to bytes and send them to the server
+            if (send)
+            {
+                string response = sendToPython(numbers);
+                Debug.Log($"Response is: {response}");
+                send = false;
+            }
 
 
-            //int result = Convert.ToInt32(response);
-            Debug.Log($"Response is: {response}");
-
-            // Convert the response to an integer and print it
-
-
-            send = false;
-        }
-
-
-        if(!connected && Reconnect)
-        {//for reconnection
-            connect();
-            Reconnect = false;
+            if (!connected && Reconnect)
+            {//for reconnection
+                connect();
+                Reconnect = false;
+            }
         }
     }
 }

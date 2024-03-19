@@ -8,7 +8,7 @@ public class save_table : MonoBehaviour
     actionValue1 afinal;
     actionValue1 a;
     
-    public TraficAgent[] t;
+    public TraficAgent0[] t;
 
 public int stateSize;
     public int actionSize;

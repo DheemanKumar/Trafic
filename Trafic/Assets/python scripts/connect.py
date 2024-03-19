@@ -38,6 +38,7 @@ while True:
     # Send the result back to the client
     client_socket.send(result.encode())
 
+Bandet.savefile()
 # Close the connection
 client_socket.close()
 server_socket.close()

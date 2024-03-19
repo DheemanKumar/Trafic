@@ -1,11 +1,14 @@
 import pickle
 
-Qtable={}
+global Qtable
 
 global file_path
 
+import random
+
 
 def loadfile(path):
+    global  Qtable
     global file_path
     file_path=path[1:]+".bin"
     try:
@@ -15,6 +18,7 @@ def loadfile(path):
         return {}
 
 def savefile():
+    global Qtable
     with open(file_path, 'wb') as file:
         pickle.dump(Qtable, file)
 
@@ -33,6 +37,7 @@ def findmax(values):
     return max_q_key
 
 def convertor(data):
+    global Qtable
     numbers = data.decode()
     if (numbers[0]=='2'):
         Qtable=loadfile(numbers)
@@ -44,26 +49,33 @@ def convertor(data):
         state=numbers[1:5]
         action=numbers[5]
         reward=numbers[6:]
-        incremental(int(state),int(action),int(reward))
+        incremental(state,int(action),int(reward))
         return "data saved"
     elif(numbers[0]=='1'):
         state=numbers[1:5]
-        action=findmax(Qtable[int(state)])
+        # print(state)
+        # print(Qtable)
+        if (state not in Qtable.keys()):
+            return str(random.randint(0,3))
+        action=findmax(Qtable[state])
         return str(action)
     
 
 #models
 
 def incremental(state,action,reward):
+    global Qtable
     if(state in Qtable.keys()):
-        if(action in Qtable[state].keys()):
-            Qtable[state][action]['n']+=1
-            Qtable[state][action]['Q']+=(1/Qtable[state][action]['n'])*(reward-Qtable[state][action]['Q'])
-        else:
-            Qtable[state][action]={'n':1,"Q":reward}
+        Qtable[state][action]['n']+=1
+        Qtable[state][action]['Q']+=(1/Qtable[state][action]['n'])*(reward-Qtable[state][action]['Q'])
     
     else :
-        Qtable[state]={action:{'n':1,"Q":reward}}
-
-
+        data={}
+        for i in range(4):
+            data[i]={'n':0,"Q":0}
+        Qtable[state]=data
+        #print("done")
+        Qtable[state][action]['n']+=1
+        Qtable[state][action]['Q']+=(1/Qtable[state][action]['n'])*(reward-Qtable[state][action]['Q'])
+        
         

@@ -5,7 +5,8 @@ using UnityEngine;
 using UnityEditor;
 using System;
 
-public class TraficAgent : MonoBehaviour
+public class TraficAgent0
+    : MonoBehaviour
 {
 
     actionValue1 av;
