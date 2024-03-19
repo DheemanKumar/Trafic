@@ -7,7 +7,8 @@ public class TraficAgent : MonoBehaviour
     public UnityToPython COMMUNICATOR;
 
 
-    void Start()
+
+    public void createfile()
     {
         string signal = "2inc";
         COMMUNICATOR.sendToPython(signal);

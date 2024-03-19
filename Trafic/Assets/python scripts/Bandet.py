@@ -33,6 +33,7 @@ def findmax(values):
         # Check if the 'Q' value of the current item is greater than the current maximum
         if value['Q'] > max_q_value:
             max_q_key = key
+            max_q_value=value['Q']
     
     return max_q_key
 

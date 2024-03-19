@@ -171,8 +171,8 @@ MonoBehaviour:
   tr: {fileID: 0}
   state: []
   timer: 0
-  Interval: 5
-  learningRate: 10
+  Interval: 2
+  learningRate: 25
 --- !u!61 &6481179865580655897
 BoxCollider2D:
   m_ObjectHideFlags: 0

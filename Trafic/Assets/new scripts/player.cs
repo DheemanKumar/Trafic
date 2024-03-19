@@ -30,6 +30,7 @@ public class player : MonoBehaviour
     void Start()
     {
         traficLight=GetComponent<traficLight>();   //calls traficLight so it can change the state of the signel
+        tr.createfile();
         //store all the four states of the light so that we can access them
         states =new state[transform.childCount];
         for (int i = 0; i < transform.childCount; i++)
@@ -63,7 +64,8 @@ public class player : MonoBehaviour
     IEnumerator next()
     {
         setreward();
-        yield return new WaitForSeconds(Interval*0.1f);
+        transform.parent.parent.GetComponent<environment>().nextRound();
+        yield return new WaitForSeconds(Interval*0.25f);
         takeaction();
     }
 
@@ -95,7 +97,7 @@ public class player : MonoBehaviour
 
         tr.StoreAction(state, action, reward);
 
-        Debug.Log("(" + state[0] + " " + state[1] + " " + state[2] + " " + state[3] + ") " + action + " " + reward);
+        //Debug.Log("(" + state[0] + " " + state[1] + " " + state[2] + " " + state[3] + ") " + action + " " + reward);
 
     }
 

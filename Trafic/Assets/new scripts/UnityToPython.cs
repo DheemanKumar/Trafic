@@ -66,7 +66,7 @@ public class UnityToPython : MonoBehaviour
 
     public string sendToPython(string message)
     {
-
+        //Debug.Log(message);
         byte[] data = Encoding.UTF8.GetBytes(message);
         stream.Write(data, 0, data.Length);
 
